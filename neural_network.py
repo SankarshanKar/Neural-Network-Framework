@@ -6,7 +6,7 @@ data.init()
 
 class Layer_Dense:
     def __init__(self, n_inputs, n_neurons):
-        self.weights = 0.10 * np.random.randn(n_inputs, n_neurons)
+        self.weights = 0.01 * np.random.randn(n_inputs, n_neurons)
         self.biases = np.zeros((1, n_neurons))
 
     def forward(self, inputs):
@@ -19,14 +19,11 @@ class Activation_ReLU:
 class Activation_Softmax:
     def forward(self, inputs):
         exp_values = np.exp(inputs - np.max(inputs, axis=1, keepdims=True))
-        probabilities = exp_values / np.sum(exp_values, axis=1, keepdims=True)
-        self.output = probabilities
+        self.output = exp_values / np.sum(exp_values, axis=1, keepdims=True)
 
 class Loss:
     def calculate(self, output, y):
-        sample_losses = self.forward(output, y)
-        data_loss = np.mean(sample_losses)
-        return data_loss
+        return np.mean(self.forward(output, y))
 
 class Loss_CategoricalCrossentropy(Loss):
     def forward(self, y_pred, y_true):
@@ -37,9 +34,10 @@ class Loss_CategoricalCrossentropy(Loss):
             correct_confidences = y_pred_clipped[range(samples), y_true]
         elif len(y_true.shape) == 2:
             correct_confidences = np.sum(y_pred_clipped * y_true, axis=1)
+        else:
+            raise ValueError('shape of y_true is wrong')
 
-        negative_log_likelihood = -np.log(correct_confidences)
-        return negative_log_likelihood
+        return -np.log(correct_confidences)
 
 X, y = spiral_data(100, 3)
 
