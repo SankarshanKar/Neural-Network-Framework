@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+np.random.randn(0)
+
 def create_data(samples, classes):
     X = np.zeros((samples * classes, 2))
     y = np.zeros(samples * classes, dtype='uint8')

@@ -33,4 +33,4 @@ def enclose(method, default_dtype):
                 kwargs['dtype'] = default_dtype
             return method[4](*args, **kwargs)
 
-    setattr(*method[:2], enclosed_method)
+    setattr(method[0], method[1], enclosed_method)
