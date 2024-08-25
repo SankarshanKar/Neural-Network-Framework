@@ -1,4 +1,5 @@
 import numpy as np
+import data
 from data.datasets import spiral_data, vertical_data
 from neural_network import Layer_Dense, Activation_ReLU, Activation_Softmax_Loss_CategoricalCrossentropy, Optimizer_SGD
 
@@ -9,7 +10,7 @@ dense1 = Layer_Dense(2, 64)
 activation1 = Activation_ReLU()
 dense2 = Layer_Dense(64, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossentropy()
-optimizer = Optimizer_SGD(decay=1e-3)
+optimizer = Optimizer_SGD(decay=1e-3, momentum=0.9)
 
 for epoch in range(10001):
     dense1.forward(X)
