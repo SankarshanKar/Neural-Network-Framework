@@ -49,7 +49,7 @@ X_test, y_test = spiral_data(samples=100, classes=3)
 dense1.forward(X_test)
 activation1.forward(dense1.output)
 dense2.forward(activation1.output)
-lass = loss_activation.forward(dense2.output, y_test)
+loss = loss_activation.forward(dense2.output, y_test)
 
 predictions = np.argmax(loss_activation.output, axis=1)
 if len(y_test.shape) == 2:
