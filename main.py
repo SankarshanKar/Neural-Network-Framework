@@ -1,13 +1,14 @@
 import numpy as np
 import data
 from data.datasets import spiral_data, vertical_data
-from neural_network import Layer_Dense, Activation_ReLU, Activation_Softmax_Loss_CategoricalCrossentropy, Optimizer_Adagrad, Optimizer_Adam, Optimizer_RMSprop, Optimizer_SGD
+from neural_network import Layer_Dense, Activation_ReLU, Activation_Softmax_Loss_CategoricalCrossentropy, Layer_Dropout, Optimizer_Adagrad, Optimizer_Adam, Optimizer_RMSprop, Optimizer_SGD
 
 # X, y = vertical_data(samples=100, classes=3)
 X, y = spiral_data(samples=1000, classes=3)
 
 dense1 = Layer_Dense(2, 512, weight_regularizer_l2=5e-4, bias_regularizer_l2=5e-4)
 activation1 = Activation_ReLU()
+dropout1 = Layer_Dropout(0.1)
 dense2 = Layer_Dense(512, 3)
 loss_activation = Activation_Softmax_Loss_CategoricalCrossentropy()
 optimizer = Optimizer_Adam(learning_rate=0.02, decay=5e-7)
@@ -15,6 +16,7 @@ optimizer = Optimizer_Adam(learning_rate=0.02, decay=5e-7)
 for epoch in range(10001):
     dense1.forward(X)
     activation1.forward(dense1.output)
+    dropout1.forward(activation1.output)
     dense2.forward(activation1.output)
     data_loss = loss_activation.forward(dense2.output, y)
 
@@ -36,6 +38,7 @@ for epoch in range(10001):
 
     loss_activation.backward(loss_activation.output, y)
     dense2.backward(loss_activation.dinputs)
+    dropout1.backward(dense2.dinputs)
     activation1.backward(dense2.dinputs)
     dense1.backward(activation1.dinputs)
 
