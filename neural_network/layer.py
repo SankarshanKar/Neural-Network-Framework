@@ -47,5 +47,5 @@ class Layer_Dropout:
         self.dinputs = dvalues * self.binary_mask
 
 class Layer_Input:
-    def forward(self, inputs):
+    def forward(self, inputs, training):
         self.output = inputs
