@@ -165,8 +165,11 @@ class Model:
 
     def forward(self, X, training):
         self.input_layer.forward(X, training)
+        layer = None
         for layer in self.layers:
             layer.forward(layer.prev.output, training)
+        if layer == None:
+            raise ValueError("Layer is None")
         return layer.output
 
     def backward(self, output, y):
