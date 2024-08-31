@@ -5,6 +5,9 @@ from neural_network.activation import Activation_Linear, Activation_ReLU
 from neural_network.layer import Layer_Dense
 from neural_network.loss import Loss_MeanSquaredError
 from neural_network.optimizer import Optimizer_Adam
+import data
+
+data.init()
 
 model = Model()
 
