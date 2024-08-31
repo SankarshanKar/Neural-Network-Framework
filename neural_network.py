@@ -1,5 +1,6 @@
 from abc import abstractmethod
 import numpy as np
+from numpy.random.mtrand import sample
 import data
 
 data.init()
@@ -98,6 +99,14 @@ class Activation_Sigmoid:
     def backward(self, dvalues):
         self.dinputs = dvalues * (1 - self.output) * self.output
 
+class Activation_Linear:
+    def forward(self, inputs):
+        self.inputs = inputs
+        self.output = inputs
+
+    def backward(self, dvalues):
+        self.dinputs = dvalues.copy()
+
 class Loss:
     def regularization_loss(self, layer):
         regularization_loss = 0
@@ -152,6 +161,26 @@ class Loss_BinaryCrossentropy(Loss):
         outputs = len(dvalues[0])
         clipped_dvalues = np.clip(dvalues, 1e-7, 1 - 1e-7)
         self.dinputs = -(y_true / clipped_dvalues - (1 - y_true) / (1 - clipped_dvalues)) / outputs
+        self.dinputs = self.dinputs / samples
+
+class Loss_MeanSquaredError(Loss):
+    def forward(self, y_pred, y_true):
+        return np.mean((y_true - y_pred) ** 2, axis=-1)
+
+    def backward(self, dvalues, y_true):
+        samples = len(dvalues)
+        outputs = len(dvalues[0])
+        self.dinputs = -2 * (y_true - dvalues) / outputs
+        self.dinputs = self.dinputs / samples
+
+class Loss_MeanAbsoluteError(Loss):
+    def forward(self, y_pred, y_true):
+        return np.mean(np.abs(y_true - y_pred), axis=-1)
+
+    def backward(self, dvalues, y_true):
+        samples = len(dvalues)
+        outputs = len(dvalues[0])
+        self.dinputs = np.sign(y_true - dvalues) / outputs
         self.dinputs = self.dinputs / samples
 
 class Optimizer_SGD:
