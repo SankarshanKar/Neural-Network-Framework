@@ -28,14 +28,14 @@ class Activation_Softmax:
         return np.argmax(outputs, axis=1)
 
 class Activation_Softmax_Loss_CategoricalCrossentropy():
-    def __init__(self):
-        self.activation = Activation_Softmax()
-        self.loss = Loss_CategoricalCrossentropy()
+    # def __init__(self):
+    #     self.activation = Activation_Softmax()
+    #     self.loss = Loss_CategoricalCrossentropy()
 
-    def forward(self, inputs, y_true):
-        self.activation.forward(inputs)
-        self.output = self.activation.output
-        return self.loss.calculate(self.output, y_true)
+    # def forward(self, inputs, y_true):
+    #     self.activation.forward(inputs)
+    #     self.output = self.activation.output
+    #     return self.loss.calculate(self.output, y_true)
 
     def backward(self, dvalues, y_true):
         samples = len(dvalues)
@@ -46,7 +46,7 @@ class Activation_Softmax_Loss_CategoricalCrossentropy():
         self.dinputs = self.dinputs / samples
 
 class Activation_Sigmoid:
-    def forward(self, inputs):
+    def forward(self, inputs, training):
         self.inputs = inputs
         self.output = 1 / (1 + np.exp(-inputs))
 
@@ -57,7 +57,7 @@ class Activation_Sigmoid:
         return (outputs > 0.5) * 1
 
 class Activation_Linear:
-    def forward(self, inputs):
+    def forward(self, inputs, training):
         self.inputs = inputs
         self.output = inputs
 
